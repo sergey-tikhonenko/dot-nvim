@@ -1,8 +1,6 @@
 return {
 	-- Rust support
-	{
-		"simrat39/rust-tools.nvim",
-	},
+	{ "simrat39/rust-tools.nvim" },
 
 	{
 		"Saecki/crates.nvim",
@@ -94,16 +92,16 @@ return {
 							vim.keymap.set("n", "<leader>cC", ":lua require('rust-tools.open_cargo_toml').open_cargo_toml()<cr>", { desc = "Open Cargo.toml", buffer = bufnr })
 						end
 					end)
+
+					local mason_registry = require("mason-registry")
+					local codelldb_root = mason_registry.get_package("codelldb"):get_install_path() .. "/extension/"
+					local codelldb_path = codelldb_root .. "adapter/codelldb"
+					local liblldb_path = codelldb_root .. "lldb/lib/liblldb.so"
+
 					require("rust-tools").setup({
-						tools = {
-							-- how to execute terminal commands
-							-- options right now: termopen / quickfix
-							-- executor = require("rust-tools.executors").quickfix,
-							hover_actions = {
-								auto_focus = true,
-							},
-						},
+						tools = { hover_actions = { auto_focus = true } },
 						server = opts,
+						dap = { adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path) },
 					})
 					return true
 				end,
