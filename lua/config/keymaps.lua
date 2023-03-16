@@ -20,8 +20,21 @@ local function map(mode, lhs, rhs, opts)
 		vim.keymap.set(mode, lhs, rhs, opts)
 	end
 end
+-- Some std keymappings
+-- Ctrl-a	Increment object (number) under cursor
+-- Ctrl-x	Decrement object (number) under cursor
+-- insert_mode
+-- <C-h> Delete previous char
+-- <C-w> Delete previous word
+-- <C-u> Delete to start of line
+-- <C-j> Insert new line
+-- map("i", "<C-d>", "<C-o>x", { desc = "Delete next char" })
+map("i", "<M-d>", "<C-o>dw", { desc = "Delete next word" })
+-- map( "i", "<M-D>", '<C-o><S-D)', { desc = "Delete to end of line"})
 
 -- delete without yanking
-map({ "n", "v" }, "<leader>d", '"_d', { desc = "delete without yanking" })
+map({ "n", "v" }, "<M-d>", '"_d', { desc = "Delete selection without yanking" })
+map({ "n", "v" }, "<M-c>", '"_c', { desc = "Change selection without yanking" })
+map({ "n", "v" }, "<M-d>", '"_x', { desc = "Delete symbol without yanking" })
 -- replace currently selected text with default register without yanking it
 map("v", "<leader>p", '"_dP', { desc = "Replace currently selected text with default register without yanking it" })

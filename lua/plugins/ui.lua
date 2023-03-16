@@ -17,6 +17,7 @@ return {
 			},
 		},
 	},
+	-- Comment line by Ctrl+/
 	{
 		"echasnovski/mini.comment",
 		keys = { { "<C-_>", 'v:lua.MiniComment.operator() . "_"', expr = true, desc = "Comment line" } },
@@ -36,36 +37,10 @@ return {
 	-- To prevent complaits like: Highlight group 'NotifyBackground' has no background highlight
 	{ "rcarriga/nvim-notify", opts = { background_colour = "#000000" } },
 
-	-- add symbols-outline
-	{
-		"simrat39/symbols-outline.nvim",
-		cmd = "SymbolsOutline",
-		keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
-		config = true,
-	},
-
-	-- Make Markdown support better: highlight codeblocks, headlines, decorate quotes
-	{
-		"lukas-reineke/headlines.nvim",
-		dependencies = "nvim-treesitter/nvim-treesitter",
-		config = true, -- or `opts = {}`
-	},
-
-	-- Markdown preview
-	{
-		"iamcco/markdown-preview.nvim",
-		build = function()
-			vim.fn["mkdp#util#install"]()
-		end,
-		ft = "markdown",
-	},
-
-	-- Еще один вариант Markdown preview
-	-- {"ellisonleao/glow.nvim", branch = 'main'}
-
 	-- Отключение русской раскладки при выходе из Insert Mode
 	{ "ts/g3kbswitch.nvim", dir = "/home/tserge/backup/configs/nvim/g3kbswitch.nvim", dev = true, config = true },
 
+	-- Toggleterm
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
@@ -78,4 +53,15 @@ return {
 		},
 	},
 	-- "ahmedkhalf/project.nvim"
+
+	-- sets vim.ui.select to telescope, see https://github.com/simrat39/rust-tools.nvim/issues/232
+	{
+		"telescope.nvim",
+		dependencies = {
+			"nvim-telescope/telescope-ui-select.nvim",
+			config = function()
+				require("telescope").load_extension("ui-select")
+			end,
+		},
+	},
 }

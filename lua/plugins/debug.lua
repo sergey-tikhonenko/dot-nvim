@@ -1,84 +1,34 @@
 -- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
+-- Examples:
+-- <https://github.com/appelgriebsch/Nv/blob/main/lua/plugins/dap.lua>
+-- <https://github.com/alpha2phi/modern-neovim/blob/main/lua/plugins/dap/init.lua>
+-- <https://gitlab.com/david_wright/nvim/-/blob/main/lua/plugins/debugging.lua>
 return {
 	{
 		"mfussenegger/nvim-dap",
 		dependencies = {
 			-- Creates a beautiful debugger UI
 			"rcarriga/nvim-dap-ui",
-			"theHamsta/nvim-dap-virtual-text",
+			"nvim-dap-virtual-text",
+			"nvim-telescope/telescope-dap.nvim",
 			-- Installs the debug adapters for you
 			"williamboman/mason.nvim",
 			"jay-babu/mason-nvim-dap.nvim",
 			-- Add your own debuggers here
-			"leoluz/nvim-dap-go",
 			-- "mfussenegger/nvim-dap-python",
-			-- "jbyuki/one-small-step-for-vimkind",
+			-- "jbyuki/one-small-step-for-vimkind", -- debug any lua code running in a Neovim instance.
 		},
-		config = function()
-			local dap = require("dap")
-			local dapui = require("dapui")
-
-			require("mason-nvim-dap").setup({
-				-- Makes a best effort to setup the various debuggers with reasonable debug configurations
-				automatic_setup = true,
-				-- You'll need to check that you have the required things installed
-				-- online, please don't ask me how to install them :)
-				ensure_installed = { -- Update this to ensure that you have the debuggers for the langs you want
-					"delve", -- golang debugger
-					"codelldb", -- codelldb for rust, ...
-					-- "python",
-				},
-			})
-
-			local sign = vim.fn.sign_define
+		config = function(plugin, opts)
 			-- These are to override the default highlight groups for catppuccin (see https://github.com/catppuccin/nvim/#special-integrations)
-			sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
-			sign("DapBreakpointCondition", { text = "●", texthl = "DapBreakpointCondition", linehl = "", numhl = "" })
-			sign("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapLogPoint", { text = "", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "", numhl = "" })
 
-			local mason_registry = require("mason-registry")
-			local codelldb_root = mason_registry.get_package("codelldb"):get_install_path() .. "/extension/"
-			local codelldb_path = codelldb_root .. "adapter/codelldb"
-			local liblldb_path = codelldb_root .. "lldb/lib/liblldb.so"
+			local dap, dapui = require("dap"), require("dapui")
 
-			dap.adapters.rust = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
-
-			-- You can provide additional configuration to the handlers, see mason-nvim-dap README for more information
-			require("mason-nvim-dap").setup_handlers()
-
-			require("nvim-dap-virtual-text").setup({
-				enabled = true,
-				enabled_commands = true,
-				highlight_changed_variables = true,
-				highlight_new_as_changed = true,
-				show_stop_reason = true,
-				commented = true,
-				only_first_definition = true,
-				all_references = true,
-				display_callback = function(variable, _buf, _stackframe, _node)
-					return " " .. variable.name .. " = " .. variable.value .. " "
-				end,
-				-- experimental features:
-				virt_text_pos = "eol", -- position of virtual text, see `:h nvim_buf_set_extmark()`
-				all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
-				virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
-				virt_text_win_col = nil, -- position the virtual text at a fixed window column (starting from the first text column) ,
-			})
-
-			-- Basic debugging keymaps, feel free to change to your liking!
-			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug continue" })
-			vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug step into" })
-			vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug step over" })
-			vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug step out" })
-			vim.keymap.set("n", "<leader>cb", dap.toggle_breakpoint, { desc = "Debug toggle breakpoint" })
-			vim.keymap.set("n", "<leader>cB", function()
-				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-			end, { desc = "Debug breakpoint condition" })
-
-			-- Dap UI setup
-			-- For more information, see |:help nvim-dap-ui|
+			-- Dap UI setup. For more information, see |:help nvim-dap-ui|
 			dapui.setup({
 				-- Set icons to characters that are more likely to work in every terminal.
 				--    Feel free to remove or use ones that you like more! :)
@@ -102,8 +52,82 @@ return {
 			dap.listeners.before.event_terminated["dapui_config"] = dapui.close
 			dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
-			-- Install golang specific config
-			require("dap-go").setup()
+			-- set up manual debugger configuration
+			for k, _ in pairs(opts.setup) do
+				opts.setup[k](plugin, opts)
+			end
+
+			-- require("dap").defaults.fallback.terminal_win_cmd = "enew | set filetype=dap-terminal"
+			-- vim.api.nvim_create_autocmd("FileType", {
+			-- 	pattern = "dap-repl",
+			-- 	callback = function()
+			-- 		require("dap.ext.autocompl").attach()
+			-- 	end,
+			-- })
+
+			-- register keymap group for debugging
+			require("which-key").register({
+				["<leader>d"] = { name = "+debug" },
+				["<leader>db"] = { name = "+breakpoints" },
+				["<leader>ds"] = { name = "+steps" },
+				["<leader>dv"] = { name = "+views" },
+			})
 		end,
+    -- stylua: ignore
+    keys = {
+      { "<leader>dbc", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Conditional Breakpoint" },
+      { "<leader>dbl", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message")) end, desc = "Logpoint" },
+      { "<leader>dbr", function() require("dap.breakpoints").clear() end, desc = "Remove All" },
+      { "<leader>dbs", "<CMD>Telescope dap list_breakpoints<CR>", desc = "Show All" },
+      { "<leader>dbt", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+
+      { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
+      { "<F9>",       function() require("dap").continue() end, desc = "Debug continue" },
+      { "<leader>de", function() require("dap.ui.widgets").hover(nil, { border = "none" }) end, desc = "Evalutate Expression", mode = { "n", "v" } },
+      { "<F12>",      function() require("dap.ui.widgets").hover() end, desc = "Hover" },
+      { "<leader>dp", function() require("dap").pause() end, desc = "Pause" },
+      { "<leader>dr", "<CMD>Telescope dap configurations<CR>", desc = "Run" },
+
+      { "<leader>dsb", function() require("dap").step_back() end, desc = "Step Back" },
+      { "<leader>dsc", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
+      { "<leader>dsi", function() require("dap").step_into() end, desc = "Step Into" },
+      { "<S-F10>",     function() require("dap").step_into() end, desc = "Debug step into" },
+      { "<leader>dso", function() require("dap").step_over() end, desc = "Step Over" },
+      { "<F10>",       function() require("dap").step_over() end, desc = "Debug step over" },
+      { "<leader>dsx", function() require("dap").step_out() end, desc = "Step Out" },
+      { "<F11>",       function() require("dap").step_out() end, desc = "Debug step out" },
+
+      { "<leader>dx", function() require("dap").terminate() end, desc = "Terminate" },
+
+      { "<leader>dvf", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").frames, { border = "none" }) end, desc = "Show Frames" },
+      { "<leader>dvr", function() require("dap").repl.open(nil, "20split") end, desc = "Show Repl" },
+      { "<leader>dvs", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").scopes, { border = "none" }) end, desc = "Show Scopes" },
+      { "<leader>dvt", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").threads, { border = "none" }) end, desc = "Show Threads" },
+    },
+	},
+
+	{
+		"theHamsta/nvim-dap-virtual-text",
+		opts = {
+			-- https://github.com/theHamsta/nvim-dap-virtual-text#readme
+			highlight_changed_variables = true,
+			-- highlight_new_as_changed = true,
+			commented = true,
+			all_references = true,
+		},
 	},
 }
+-- require("mason-nvim-dap").setup({
+-- 	-- Makes a best effort to setup the various debuggers with reasonable debug configurations
+-- 	automatic_setup = true,
+-- 	-- You'll need to check that you have the required things installed
+-- 	-- online, please don't ask me how to install them :)
+-- 	ensure_installed = { -- Update this to ensure that you have the debuggers for the langs you want
+-- 		"delve", -- golang debugger
+-- 		"codelldb", -- codelldb for rust, ...
+-- 		-- "python",
+-- 	},
+-- })
+-- -- You can provide additional configuration to the handlers, see mason-nvim-dap README for more information
+-- -- <https://github.com/jay-babu/mason-nvim-dap.nvim#setup-handlers-usage>
+-- require("mason-nvim-dap").setup_handlers()
