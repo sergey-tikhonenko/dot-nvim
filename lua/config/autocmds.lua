@@ -9,3 +9,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 		vim.b.autoformat = false
 	end,
 })
+
+-- проверить
+-- Подсвечивает на доли секунды скопированную часть текста
+-- vim.api.nvim_exec([[
+--   augroup YankHighlight
+--     autocmd!
+--     autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=300}
+--   augroup end
+-- ]], false)

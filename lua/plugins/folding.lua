@@ -23,11 +23,12 @@ return {
 			for _, ls in ipairs(language_servers) do
 				-- Client 1 quit with exit code 143 and signal 0
 				-- if ls ~= "markman" then
-				require("lspconfig")[ls].setup({
-					capabilities = capabilities,
-					-- you can add other fields for setting up lsp server in this table
-				})
-				-- end
+				if ls ~= "rust_analyzer" then
+					require("lspconfig")[ls].setup({
+						capabilities = capabilities,
+						-- you can add other fields for setting up lsp server in this table
+					})
+				end
 			end
 			require("ufo").setup()
 		end,

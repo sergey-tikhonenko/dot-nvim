@@ -23,6 +23,9 @@ return {
 		keys = { { "<C-_>", 'v:lua.MiniComment.operator() . "_"', expr = true, desc = "Comment line" } },
 	},
 
+	-- Better ESC
+	{ "max397574/better-escape.nvim", config = true },
+
 	-- Make TokyoNight Transparent
 	{
 		"folke/tokyonight.nvim",
@@ -54,14 +57,45 @@ return {
 	},
 	-- "ahmedkhalf/project.nvim"
 
-	-- sets vim.ui.select to telescope, see https://github.com/simrat39/rust-tools.nvim/issues/232
 	{
 		"telescope.nvim",
 		dependencies = {
-			"nvim-telescope/telescope-ui-select.nvim",
-			config = function()
-				require("telescope").load_extension("ui-select")
-			end,
+			-- sets vim.ui.select to telescope, see https://github.com/simrat39/rust-tools.nvim/issues/232
+			{
+				"nvim-telescope/telescope-ui-select.nvim",
+				config = function()
+					require("telescope").load_extension("ui-select")
+				end,
+			},
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				build = "make",
+				config = function()
+					require("telescope").load_extension("fzf")
+				end,
+			},
+		},
+		opts = {
+			defaults = {
+				initial_mode = "normal",
+				layout_config = { width = 0.9, preview_width = 0.7, preview_cutoff = 60 },
+				-- preview = {
+				-- 	hide_on_startup = true, -- hide previewer when picker starts
+				-- },
+				mappings = {
+					-- https://github.com/nvim-telescope/telescope.nvim#default-mappings
+					n = {
+						["<a-i>"] = require("lazyvim.util").telescope("find_files", { no_ignore = true }),
+						["<a-h>"] = require("lazyvim.util").telescope("find_files", { hidden = true }),
+						["<C-p>"] = require("telescope.actions.layout").toggle_preview,
+					},
+					i = {
+						["<C-j>"] = require("telescope.actions").move_selection_next,
+						["<C-k>"] = require("telescope.actions").move_selection_previous,
+						["<C-p>"] = require("telescope.actions.layout").toggle_preview,
+					},
+				},
+			},
 		},
 	},
 }

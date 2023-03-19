@@ -24,7 +24,7 @@ return {
 			vim.list_extend(opts.ensure_installed, {
 				"codelldb",
 				"rust-analyzer",
-				"taplo", -- TOML validation (LSP), formatting, see https://github.com/tamasfe/taplo
+				-- "taplo", -- TOML validation (LSP), formatting, see https://github.com/tamasfe/taplo
 			})
 		end,
 	},
@@ -68,13 +68,13 @@ return {
 						if client.name == "rust_analyzer" then
               -- [LSP] Accessing client.resolved_capabilities is deprecated, update your plugins or configuration to access client.server_capabilities instead.The new key/value pairs in server_capabilities directly match those defined in the language server protocol
 							-- if client.resolved_capabilities["code_lens"] then
-                -- vim.keymap.set("n", "<leader>cL", ":lua vim.lsp.codelens.refresh()<cr>", { desc = "Code lens refresh", buffer = bufnr })
+                vim.keymap.set("n", "<leader>cL", ":lua vim.lsp.codelens.refresh()<cr>", { desc = "Code lens refresh", buffer = bufnr })
                 vim.keymap.set("n", "<leader>cx", ":lua vim.lsp.codelens.run()<cr>", { desc = "Code lens execute this", buffer = bufnr })
               -- end
-              vim.keymap.set("n", "<leader>cR", "<cmd>RustRunnables<cr>", { desc = "List Rust Runnables", buffer = bufnr })
-              vim.keymap.set("n", "<leader>cD", "<cmd>RustDebuggables<cr>", { desc = "List Rust Debuggables", buffer = bufnr })
-              vim.keymap.set("n", "<leader>cH", "<cmd>RustHoverActions<cr>", { desc = "Rust Hover Actions", buffer = bufnr })
-							vim.keymap.set("n", "<leader>cC", "<cmd>RustOpenCargo<cr>", { desc = "Open Cargo.toml", buffer = bufnr })
+              vim.keymap.set("n", "<leader>cR", ":lua require('rust-tools').runnables.runnables()<cr>", { desc = "List Rust Runnables", buffer = bufnr })
+              vim.keymap.set("n", "<leader>cD", ":lua require('rust-tools').debuggables.debuggables()<cr>", { desc = "List Rust Debuggables", buffer = bufnr })
+              vim.keymap.set("n", "<leader>cH", ":lua require('rust-tools').hover_actions.hover_actions().<cr>", { desc = "Rust Hover Actions", buffer = bufnr })
+              vim.keymap.set("n", "<leader>cC", ":lua require('rust-tools').open_cargo_toml.open_cargo_toml()<cr>", { desc = "Open Cargo.toml", buffer = bufnr })
 						end
 					end)
 
@@ -88,7 +88,9 @@ return {
 						tools = {
 							hover_actions = { border = "solid", auto_focus = true },
 							on_initialized = function()
+								vim.notify("RustTools initialized")
 								vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "CursorHold", "InsertLeave" }, {
+									group = vim.api.nvim_create_augroup("RustTootsLspRefresh", { clear = true }),
 									pattern = { "*.rs" },
 									callback = function()
 										vim.lsp.codelens.refresh()
@@ -159,8 +161,8 @@ return {
 							type = "rt_lldb",
 							request = "launch",
 							program = function()
-                -- stylua: ignore
-                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+	               -- stylua: ignore
+	               return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
 							end,
 							cwd = "${workspaceFolder}",
 							stopOnEntry = true,
