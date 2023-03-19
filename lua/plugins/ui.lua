@@ -55,8 +55,8 @@ return {
 			},
 		},
 	},
-	-- "ahmedkhalf/project.nvim"
 
+	-- telescope extension and additonal customization
 	{
 		"telescope.nvim",
 		dependencies = {
@@ -77,7 +77,7 @@ return {
 		},
 		opts = {
 			defaults = {
-				initial_mode = "normal",
+				-- initial_mode = "normal",
 				layout_config = { width = 0.9, preview_width = 0.7, preview_cutoff = 60 },
 				-- preview = {
 				-- 	hide_on_startup = true, -- hide previewer when picker starts
@@ -98,4 +98,35 @@ return {
 			},
 		},
 	},
+
+	-- scrollbar
+	{
+		"petertriho/nvim-scrollbar",
+		event = "BufReadPost",
+		config = function()
+			local scrollbar = require("scrollbar")
+			local colors = require("tokyonight.colors").setup()
+			scrollbar.setup({
+				handle = { color = colors.bg_highlight },
+				excluded_filetypes = { "prompt", "TelescopePrompt", "noice", "notify" },
+				marks = {
+					Search = { color = colors.orange },
+					Error = { color = colors.error },
+					Warn = { color = colors.warning },
+					Info = { color = colors.info },
+					Hint = { color = colors.hint },
+					Misc = { color = colors.purple },
+				},
+			})
+		end,
+	},
+
+	-- "ahmedkhalf/project.nvim"
+
+	-- floating winbar { "b0o/incline.nvim", event = "BufReadPre", }
+
+	-- auto-resize windows { "anuvyklack/windows.nvim", event = "WinNew",
+	--   dependencies = { { "anuvyklack/middleclass" }, { "anuvyklack/animation.nvim", enabled = false }, },
+	--   keys = { { "<leader>Z", "<cmd>WindowsMaximize<cr>", desc = "Zoom" } },
+	-- }
 }

@@ -13,19 +13,6 @@ return {
 				-- https://github.com/artempyanykh/marksman/blob/main/docs/configuration.md
 				marksman = {}, -- makrdown language server
 			},
-			-- setup = {
-			-- 	marksman = function(_, opts)
-			-- 		require("lazyvim.util").on_attach(function(client, bufnr)
-			-- 			if client.name == "marksman" then
-			-- 				vim.wo.foldmethod = "expr"
-			-- 				vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-			-- 				vim.wo.foldlevel = 9
-			-- 			end
-			-- 		end)
-			-- 		-- return true if you don't want this server to be setup with lspconfig
-			-- 		return false
-			-- 	end,
-			-- },
 		},
 	},
 
@@ -72,6 +59,26 @@ return {
 		end,
 		ft = "markdown",
 	},
+	-- markdown preview
+	-- {
+	-- 	"toppair/peek.nvim",
+	-- 	build = "deno task --quiet build:fast",
+	-- 	keys = {
+	-- 		{
+	-- 			"<leader>op",
+	-- 			function()
+	-- 				local peek = require("peek")
+	-- 				if peek.is_open() then
+	-- 					peek.close()
+	-- 				else
+	-- 					peek.open()
+	-- 				end
+	-- 			end,
+	-- 			desc = "Peek (Markdown Preview)",
+	-- 		},
+	-- 	},
+	-- 	opts = { theme = "light", app = "firefox" },
+	-- },
 
 	-- Еще один вариант Markdown preview
 	-- {"ellisonleao/glow.nvim", branch = 'main'}
