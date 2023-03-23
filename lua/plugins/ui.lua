@@ -41,7 +41,7 @@ return {
 	{ "rcarriga/nvim-notify", opts = { background_colour = "#000000" } },
 
 	-- Отключение русской раскладки при выходе из Insert Mode
-	{ "ts/g3kbswitch.nvim", dir = "/home/tserge/backup/configs/nvim/g3kbswitch.nvim", dev = true, config = true },
+	{ "sergey-tikhonenko/xkbswitch.nvim", config = true },
 
 	-- Toggleterm
 	{

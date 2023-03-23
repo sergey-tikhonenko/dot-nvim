@@ -86,7 +86,7 @@ return {
 
 					require("rust-tools").setup({
 						tools = {
-							hover_actions = { border = "solid", auto_focus = true },
+							-- executor = require("rust-tools.executors").toggleterm,
 							on_initialized = function()
 								vim.notify("RustTools initialized")
 								vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -97,6 +97,7 @@ return {
 									end,
 								})
 							end,
+							hover_actions = { border = "solid", auto_focus = true },
 						},
 						server = opts,
 						dap = { adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path) },
@@ -126,21 +127,25 @@ return {
           -- or
           -- opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "crates" }, }))
 
+          -- register keymap group for debugging
+          require("which-key").register({
+            ["<leader>cc"] = { name = "+crates" },
+          })
 					-- define per buffer keymaps
 					local map = vim.keymap.set
 					local bufnr = vim.api.nvim_get_current_buf()
+          map( "n", "<leader>ch", ":lua require('crates').show_crate_popup()<cr>", { desc = "Show crate details.", buffer = bufnr })
 					map( "n", "<leader>ct", ":lua require('crates').toggle()<cr>", { desc = "Toggle extra crates.io information", buffer = bufnr })
-					map( "n", "<leader>cr", ":lua require('crates').reload()<cr>", { desc = "Reload information from crates.io", buffer = bufnr })
 					map( "n", "<leader>cu", ":lua require('crates').update_crate()<cr>", { desc = "Update a crate", buffer = bufnr })
 					map( "v", "<leader>cu", ":lua require('crates').update_crates()<cr>", { desc = "Update selected crates", buffer = bufnr })
 					map( "n", "<leader>cU", ":lua require('crates').upgrade_crate()<cr>", { desc = "Upgrade a crate", buffer = bufnr })
 					map( "v", "<leader>cU", ":lua require('crates').upgrade_crates()<cr>", { desc = "Upgrade selected crates", buffer = bufnr })
-					map( "n", "<leader>ca", ":lua require('crates').update_all_crates()<cr>", { desc = "Update all crates", buffer = bufnr })
-					map( "n", "<leader>cA", ":lua require('crates').upgrade_all_crates()<cr>", { desc = "Upgrade all crates", buffer = bufnr })
-					map( "n", "K",          ":lua require('crates').show_crate_popup()<cr>", { desc = "Show crate details.", buffer = bufnr })
-					map( "n", "<leader>cf", ":lua require('crates').show_features_popup()<cr>", { desc = "Show crate features.", buffer = bufnr })
-					map( "n", "<leader>cd", ":lua require('crates').show_dependencies_popup()<cr>", { desc = "Show crate dependencies.", buffer = bufnr })
-					map( "n", "<leader>cv", ":lua require('crates').show_versions_popup()<cr>", { desc = "Show crate versions.", buffer = bufnr })
+          map( "n", "<leader>ccr", ":lua require('crates').reload()<cr>", { desc = "Reload information from crates.io", buffer = bufnr })
+					map( "n", "<leader>cca", ":lua require('crates').update_all_crates()<cr>", { desc = "Update all crates", buffer = bufnr })
+					map( "n", "<leader>ccA", ":lua require('crates').upgrade_all_crates()<cr>", { desc = "Upgrade all crates", buffer = bufnr })
+					map( "n", "<leader>ccf", ":lua require('crates').show_features_popup()<cr>", { desc = "Show crate features.", buffer = bufnr })
+					map( "n", "<leader>ccd", ":lua require('crates').show_dependencies_popup()<cr>", { desc = "Show crate dependencies.", buffer = bufnr })
+					map( "n", "<leader>ccv", ":lua require('crates').show_versions_popup()<cr>", { desc = "Show crate versions.", buffer = bufnr })
 				end,
 			})
 		end,

@@ -13,7 +13,7 @@ return {
 			"nvim-telescope/telescope-dap.nvim",
 			-- Installs the debug adapters for you
 			"williamboman/mason.nvim",
-			"jay-babu/mason-nvim-dap.nvim",
+			-- "jay-babu/mason-nvim-dap.nvim",
 			-- Add your own debuggers here
 			-- "mfussenegger/nvim-dap-python",
 			-- "jbyuki/one-small-step-for-vimkind", -- debug any lua code running in a Neovim instance.
