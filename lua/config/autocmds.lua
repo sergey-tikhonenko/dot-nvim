@@ -4,10 +4,10 @@
 
 -- Disable autoformat for xml files
 vim.api.nvim_create_autocmd({ "FileType" }, {
-	pattern = { "xml" },
-	callback = function()
-		vim.b.autoformat = false
-	end,
+  pattern = { "xml" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
 })
 
 -- проверить

@@ -8,18 +8,18 @@
 --   visual_mode = "v", visual_block_mode = "x",  CTRL-V
 
 local function map(mode, lhs, rhs, opts)
-	local keys = require("lazy.core.handler").handlers.keys
-	---@cast keys LazyKeysHandler
-	-- do not create the keymap if a lazy keys handler exists
-	if not keys.active[keys.parse({ lhs, mode = mode }).id] then
-		opts = opts or {}
-		opts.silent = opts.silent ~= false
-		vim.keymap.set(mode, lhs, rhs, opts)
-	end
+  local keys = require("lazy.core.handler").handlers.keys
+  ---@cast keys LazyKeysHandler
+  -- do not create the keymap if a lazy keys handler exists
+  if not keys.active[keys.parse({ lhs, mode = mode }).id] then
+    opts = opts or {}
+    opts.silent = opts.silent ~= false
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
 end
 -- Some std keymappings
--- Ctrl-a	Increment object (number) under cursor
--- Ctrl-x	Decrement object (number) under cursor
+-- Ctrl-a  Increment object (number) under cursor
+-- Ctrl-x  Decrement object (number) under cursor
 
 -- delete without yanking
 map({ "n", "v" }, "<M-d>", '"_d', { desc = "Delete selection without yanking" })

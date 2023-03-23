@@ -4,75 +4,75 @@
 -- <https://github.com/alpha2phi/modern-neovim/blob/main/lua/plugins/dap/init.lua>
 -- <https://gitlab.com/david_wright/nvim/-/blob/main/lua/plugins/debugging.lua>
 return {
-	{
-		"mfussenegger/nvim-dap",
-		dependencies = {
-			-- Creates a beautiful debugger UI
-			"rcarriga/nvim-dap-ui",
-			"nvim-dap-virtual-text",
-			"nvim-telescope/telescope-dap.nvim",
-			-- Installs the debug adapters for you
-			"williamboman/mason.nvim",
-			-- "jay-babu/mason-nvim-dap.nvim",
-			-- Add your own debuggers here
-			-- "mfussenegger/nvim-dap-python",
-			-- "jbyuki/one-small-step-for-vimkind", -- debug any lua code running in a Neovim instance.
-		},
-		config = function(plugin, opts)
-			-- These are to override the default highlight groups for catppuccin (see https://github.com/catppuccin/nvim/#special-integrations)
-			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapLogPoint", { text = "", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "", numhl = "" })
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      -- Creates a beautiful debugger UI
+      "rcarriga/nvim-dap-ui",
+      "nvim-dap-virtual-text",
+      "nvim-telescope/telescope-dap.nvim",
+      -- Installs the debug adapters for you
+      "williamboman/mason.nvim",
+      -- "jay-babu/mason-nvim-dap.nvim",
+      -- Add your own debuggers here
+      -- "mfussenegger/nvim-dap-python",
+      -- "jbyuki/one-small-step-for-vimkind", -- debug any lua code running in a Neovim instance.
+    },
+    config = function(plugin, opts)
+      -- These are to override the default highlight groups for catppuccin (see https://github.com/catppuccin/nvim/#special-integrations)
+      vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapLogPoint", { text = "", texthl = "", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "", numhl = "" })
 
-			local dap, dapui = require("dap"), require("dapui")
+      local dap, dapui = require("dap"), require("dapui")
 
-			-- Dap UI setup. For more information, see |:help nvim-dap-ui|
-			dapui.setup({
-				-- Set icons to characters that are more likely to work in every terminal.
-				--    Feel free to remove or use ones that you like more! :)
-				--    Don't feel like these are good choices.
-				icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-				controls = {
-					icons = {
-						pause = "",
-						play = "",
-						step_into = "",
-						step_over = "",
-						step_out = "",
-						step_back = "",
-						run_last = "↻",
-						terminate = "□",
-					},
-				},
-			})
+      -- Dap UI setup. For more information, see |:help nvim-dap-ui|
+      dapui.setup({
+        -- Set icons to characters that are more likely to work in every terminal.
+        --    Feel free to remove or use ones that you like more! :)
+        --    Don't feel like these are good choices.
+        icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+        controls = {
+          icons = {
+            pause = "",
+            play = "",
+            step_into = "",
+            step_over = "",
+            step_out = "",
+            step_back = "",
+            run_last = "↻",
+            terminate = "□",
+          },
+        },
+      })
 
-			dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-			dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-			dap.listeners.before.event_exited["dapui_config"] = dapui.close
+      dap.listeners.after.event_initialized["dapui_config"] = dapui.open
+      dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+      dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
-			-- set up manual debugger configuration
-			for k, _ in pairs(opts.setup) do
-				opts.setup[k](plugin, opts)
-			end
+      -- set up manual debugger configuration
+      for k, _ in pairs(opts.setup) do
+        opts.setup[k](plugin, opts)
+      end
 
-			-- require("dap").defaults.fallback.terminal_win_cmd = "enew | set filetype=dap-terminal"
-			-- vim.api.nvim_create_autocmd("FileType", {
-			-- 	pattern = "dap-repl",
-			-- 	callback = function()
-			-- 		require("dap.ext.autocompl").attach()
-			-- 	end,
-			-- })
+      -- require("dap").defaults.fallback.terminal_win_cmd = "enew | set filetype=dap-terminal"
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   pattern = "dap-repl",
+      --   callback = function()
+      --     require("dap.ext.autocompl").attach()
+      --   end,
+      -- })
 
-			-- register keymap group for debugging
-			require("which-key").register({
-				["<leader>d"] = { name = "+debug" },
-				["<leader>db"] = { name = "+breakpoints" },
-				["<leader>ds"] = { name = "+steps" },
-				["<leader>dv"] = { name = "+views" },
-			})
-		end,
+      -- register keymap group for debugging
+      require("which-key").register({
+        ["<leader>d"] = { name = "+debug" },
+        ["<leader>db"] = { name = "+breakpoints" },
+        ["<leader>ds"] = { name = "+steps" },
+        ["<leader>dv"] = { name = "+views" },
+      })
+    end,
     -- stylua: ignore
     keys = {
       { "<leader>dbc", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Conditional Breakpoint" },
@@ -108,29 +108,29 @@ return {
       { "<leader>dvs", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").scopes, { border = "none" }) end, desc = "Show Scopes" },
       { "<leader>dvt", function() require("dap.ui.widgets").centered_float(require("dap.ui.widgets").threads, { border = "none" }) end, desc = "Show Threads" },
     },
-	},
+  },
 
-	{
-		"theHamsta/nvim-dap-virtual-text",
-		opts = {
-			-- https://github.com/theHamsta/nvim-dap-virtual-text#readme
-			highlight_changed_variables = true,
-			-- highlight_new_as_changed = true,
-			commented = true,
-			all_references = true,
-		},
-	},
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    opts = {
+      -- https://github.com/theHamsta/nvim-dap-virtual-text#readme
+      highlight_changed_variables = true,
+      -- highlight_new_as_changed = true,
+      commented = true,
+      all_references = true,
+    },
+  },
 }
 -- require("mason-nvim-dap").setup({
--- 	-- Makes a best effort to setup the various debuggers with reasonable debug configurations
--- 	automatic_setup = true,
--- 	-- You'll need to check that you have the required things installed
--- 	-- online, please don't ask me how to install them :)
--- 	ensure_installed = { -- Update this to ensure that you have the debuggers for the langs you want
--- 		"delve", -- golang debugger
--- 		"codelldb", -- codelldb for rust, ...
--- 		-- "python",
--- 	},
+--   -- Makes a best effort to setup the various debuggers with reasonable debug configurations
+--   automatic_setup = true,
+--   -- You'll need to check that you have the required things installed
+--   -- online, please don't ask me how to install them :)
+--   ensure_installed = { -- Update this to ensure that you have the debuggers for the langs you want
+--     "delve", -- golang debugger
+--     "codelldb", -- codelldb for rust, ...
+--     -- "python",
+--   },
 -- })
 -- -- You can provide additional configuration to the handlers, see mason-nvim-dap README for more information
 -- -- <https://github.com/jay-babu/mason-nvim-dap.nvim#setup-handlers-usage>
