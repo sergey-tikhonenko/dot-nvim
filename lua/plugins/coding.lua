@@ -4,13 +4,39 @@ return {
   -- available parsers:
   -- https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lua/nvim-treesitter/parsers.lua
   -- https://tree-sitter.github.io/tree-sitter/#parsers (a bit outdated)
+  -- see ./extras/lang/rust.lua and markup-langs.lua for examples
+
+  -- configure functions / methods jumps
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      -- map the html parser to be used when using xml files
-      local parser_mapping = require("nvim-treesitter.parsers").filetype_to_parsername
-      parser_mapping.xml = "html"
-    end,
+    -- stylua: ignore
+    keys = {
+      { ";", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next, mode = { "n", "x", "o" }, desc = "Repeat last move next" },
+      { ",", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous, mode = { "n", "x", "o" }, desc = "Repeat last move previous" },
+    },
+    opts = {
+      textobjects = { -- <https://github.com/nvim-treesitter/nvim-treesitter-textobjects#text-objects-move>
+        move = {
+          enable = true,
+          goto_next_start = {
+            ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            ["]m"] = { query = "@function.outer", desc = "Next function start" },
+          },
+          goto_next_end = {
+            ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            ["]M"] = { query = "@function.outer", desc = "Next function end" },
+          },
+          goto_previous_start = {
+            ["[c"] = { query = "@class.outer", desc = "Previous class start" },
+            ["[m"] = { query = "@function.outer", desc = "Previous function start" },
+          },
+          goto_previous_end = {
+            ["[C"] = { query = "@class.outer", desc = "Previous class end" },
+            ["[M"] = { query = "@function.outer", desc = "Previous function end" },
+          },
+        },
+      },
+    },
   },
 
   -- configuration of language servers, see for default keymamp:

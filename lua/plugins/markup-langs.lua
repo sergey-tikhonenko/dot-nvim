@@ -1,6 +1,14 @@
 -- see for example:
 -- <https://github.com/alpha2phi/modern-neovim/blob/main/lua/plugins/extras/pde/notes/markdown.lua>
 return {
+  -- map the html parser to be used when using xml files
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      local parser_mapping = require("nvim-treesitter.parsers").filetype_to_parsername
+      parser_mapping.xml = "html"
+    end,
+  },
 
   -- configure lspconfig
   {

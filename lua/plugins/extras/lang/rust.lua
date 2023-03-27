@@ -71,6 +71,7 @@ return {
                 vim.keymap.set("n", "<leader>cL", ":lua vim.lsp.codelens.refresh()<cr>", { desc = "Code lens refresh", buffer = bufnr })
                 vim.keymap.set("n", "<leader>cx", ":lua vim.lsp.codelens.run()<cr>", { desc = "Code lens execute this", buffer = bufnr })
               -- end
+              -- vim.keymap.set("n", "<leader>cX", ":lua require('rust-tools').cached_commands.execute_last_runnable()<cr>", { desc = "Last Rust Run", buffer = bufnr })
               vim.keymap.set("n", "<leader>cR", ":lua require('rust-tools').runnables.runnables()<cr>", { desc = "List Rust Runnables", buffer = bufnr })
               vim.keymap.set("n", "<leader>cD", ":lua require('rust-tools').debuggables.debuggables()<cr>", { desc = "List Rust Debuggables", buffer = bufnr })
               vim.keymap.set("n", "<leader>cH", ":lua require('rust-tools').hover_actions.hover_actions().<cr>", { desc = "Rust Hover Actions", buffer = bufnr })
@@ -151,32 +152,32 @@ return {
     end,
   },
 
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "simrat39/rust-tools.nvim",
-    },
-    opts = {
-      setup = {
-        codelldb = function()
-          local dap = require("dap")
-          dap.configurations.rust = {
-            {
-              name = "Rust debug",
-              type = "rt_lldb",
-              request = "launch",
-              program = function()
-                 -- stylua: ignore
-                 return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
-              end,
-              cwd = "${workspaceFolder}",
-              stopOnEntry = true,
-            },
-          }
-        end,
-      },
-    },
-  },
+  -- {
+  --   "mfussenegger/nvim-dap",
+  --   dependencies = {
+  --     "simrat39/rust-tools.nvim",
+  --   },
+  --   opts = {
+  --     setup = {
+  --       codelldb = function()
+  --         local dap = require("dap")
+  --         dap.configurations.rust = {
+  --           {
+  --             name = "Rust debug",
+  --             type = "rt_lldb",
+  --             request = "launch",
+  --             program = function()
+  --                -- stylua: ignore
+  --                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+  --             end,
+  --             cwd = "${workspaceFolder}",
+  --             stopOnEntry = true,
+  --           },
+  --         }
+  --       end,
+  --     },
+  --   },
+  -- },
 }
 -- dap.adapters.codelldb = {
 --   type = "server",

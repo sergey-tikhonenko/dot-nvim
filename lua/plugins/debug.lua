@@ -53,8 +53,10 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
       -- set up manual debugger configuration
-      for k, _ in pairs(opts.setup) do
-        opts.setup[k](plugin, opts)
+      if opts.setup then
+        for k, _ in pairs(opts.setup) do
+          opts.setup[k](plugin, opts)
+        end
       end
 
       -- require("dap").defaults.fallback.terminal_win_cmd = "enew | set filetype=dap-terminal"
