@@ -15,8 +15,8 @@ return {
       { ",", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous, mode = { "n", "x", "o" }, desc = "Repeat last move previous" },
     },
     opts = {
-      textobjects = { -- <https://github.com/nvim-treesitter/nvim-treesitter-textobjects#text-objects-move>
-        move = {
+      textobjects = { -- configuration : https://github.com/nvim-treesitter/nvim-treesitter-textobjects#text-objects-move
+        move = { -- textobjects classes : https://github.com/nvim-treesitter/nvim-treesitter-textobjects/blob/master/scripts/minimal_init.lua#L105
           enable = true,
           goto_next_start = {
             ["]c"] = { query = "@class.outer", desc = "Next class start" },
@@ -72,19 +72,13 @@ return {
   --   end,
   -- },
 
-  -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
-  -- treesitter, mason and typescript.nvim.
-  -- see <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/typescript.lua>
-  { import = "lazyvim.plugins.extras.lang.typescript" },
-
+  -- for typescript and some others languages, LazyVim also includes extra specs to properly setup
+  -- lspconfig, treesitter, mason and typescript.nvim. ../config/lazy.lua
+  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/typescript.lua>
   -- add jsonls and schemastore ans setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.json" },
-
-  -- Rust support
-  { import = "plugins.extras.lang.rust" },
-
-  -- Go support
-  { import = "plugins.extras.lang.golang" },
+  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/json.lua>
+  -- Rust <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/rust.lua>
+  -- Go <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/go.lua>
 
   -- add symbols-outline
   {

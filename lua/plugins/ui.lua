@@ -5,8 +5,7 @@
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
-  -- Configure neo-tree for additional key mappings
-  {
+  { -- Configure neo-tree for additional key mappings
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
       window = {
@@ -17,35 +16,44 @@ return {
       },
     },
   },
-  -- Comment line by Ctrl+/
-  {
-    "echasnovski/mini.comment",
-    keys = { { "<C-_>", 'v:lua.MiniComment.operator() . "_"', expr = true, desc = "Comment line" } },
-  },
+  -- { -- Comment line by Ctrl+/ TODO: used by LazyVim terminal now
+  --   "echasnovski/mini.comment",
+  --   keys = { { "<C-/>", 'v:lua.MiniComment.operator() . "_"', expr = true, desc = "Comment line" } },
+  -- },
 
   -- Better ESC
   { "max397574/better-escape.nvim", config = true },
 
-  -- Make TokyoNight Transparent
-  {
+  { -- Configure Color Scheme
     "folke/tokyonight.nvim",
     opts = {
-      transparent = true,
+      transparent = true, -- Make TokyoNight Transparent
       styles = {
         sidebars = "transparent",
         -- floats = "transparent",
-      },
+      }, -- see [Theme definition](https://github.com/folke/tokyonight.nvim/blob/main/lua/tokyonight/theme.lua)
+      on_highlights = function(hl, c)
+        hl.Folded = { -- Change Folded Highlight Group
+          -- bg = "#002B36",
+          bg = c.none,
+          fg = c.blue,
+        }
+      end,
     },
   },
   -- To prevent complaits like: Highlight group 'NotifyBackground' has no background highlight
-  { "rcarriga/nvim-notify", opts = { background_colour = "#000000" } },
+  { "rcarriga/nvim-notify", opts = { background_colour = "#002B36" } },
+
+  -- show colors cmd: ColorizerAttachToBuffer
+  { "norcalli/nvim-colorizer.lua", event = "VeryLazy", setup = true },
 
   -- Отключение русской раскладки при выходе из Insert Mode
-  -- { "sergey-tikhonenko/xkbswitch.nvim", config = true },
   { "ivanesmantovich/xkbswitch.nvim", config = true },
 
-  -- Toggleterm
-  {
+  -- переносы в длинных строках - commands: SoftWrapMode, ToggleWrapMode, keys: [ow (soft wrap mode), yow (toggle wrap mode)
+  { "andrewferrier/wrapping.nvim", config = true },
+
+  { -- Toggleterm
     "akinsho/toggleterm.nvim",
     version = "*",
     opts = {
@@ -57,51 +65,68 @@ return {
     },
   },
 
-  -- telescope extension and additonal customization
-  {
-    "telescope.nvim",
-    dependencies = {
-      -- sets vim.ui.select to telescope, see https://github.com/simrat39/rust-tools.nvim/issues/232
-      {
-        "nvim-telescope/telescope-ui-select.nvim",
-        config = function()
-          require("telescope").load_extension("ui-select")
-        end,
-      },
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        config = function()
-          require("telescope").load_extension("fzf")
-        end,
-      },
-    },
-    opts = {
-      defaults = {
-        -- initial_mode = "normal",
-        layout_config = { width = 0.9, preview_width = 0.7, preview_cutoff = 60 },
-        -- preview = {
-        -- 	hide_on_startup = true, -- hide previewer when picker starts
-        -- },
-        mappings = {
-          -- https://github.com/nvim-telescope/telescope.nvim#default-mappings
-          n = {
-            ["<a-i>"] = require("lazyvim.util").telescope("find_files", { no_ignore = true }),
-            ["<a-h>"] = require("lazyvim.util").telescope("find_files", { hidden = true }),
-            ["<C-p>"] = require("telescope.actions.layout").toggle_preview,
-          },
-          i = {
-            ["<C-j>"] = require("telescope.actions").move_selection_next,
-            ["<C-k>"] = require("telescope.actions").move_selection_previous,
-            ["<C-p>"] = require("telescope.actions.layout").toggle_preview,
-          },
-        },
-      },
-    },
-  },
+  -- { -- telescope extension and additonal customization
+  --   "telescope.nvim",
+  --   dependencies = {
+  --     -- { -- sets vim.ui.select to telescope, see https://github.com/simrat39/rust-tools.nvim/issues/232
+  --     --   "nvim-telescope/telescope-ui-select.nvim",
+  --     --   config = function()
+  --     --     require("telescope").load_extension("ui-select")
+  --     --   end,
+  --     -- }, -- dressing.nvim is an alternavive
+  --     {
+  --       "nvim-telescope/telescope-fzf-native.nvim",
+  --       build = "make",
+  --       config = function()
+  --         require("telescope").load_extension("fzf")
+  --       end,
+  --     },
+  --   },
+  --   opts = {
+  --     defaults = {
+  --       -- initial_mode = "normal",
+  --       layout_config = { width = 0.9, preview_width = 0.7, preview_cutoff = 60 },
+  --       -- preview = {
+  --       -- 	hide_on_startup = true, -- hide previewer when picker starts
+  --       -- },
+  --       mappings = {
+  --         -- https://github.com/nvim-telescope/telescope.nvim#default-mappings
+  --         n = {
+  --           ["<a-i>"] = require("lazyvim.util").telescope("find_files", { no_ignore = true }),
+  --           ["<a-h>"] = require("lazyvim.util").telescope("find_files", { hidden = true }),
+  --           ["<C-p>"] = require("telescope.actions.layout").toggle_preview,
+  --         },
+  --         i = {
+  --           ["<C-j>"] = require("telescope.actions").move_selection_next,
+  --           ["<C-k>"] = require("telescope.actions").move_selection_previous,
+  --           ["<C-p>"] = require("telescope.actions.layout").toggle_preview,
+  --         },
+  --       },
+  --     },
+  --   },
+  --   keys = {
+  --     {
+  --       "<leader>sX",
+  --       require("lazyvim.util").telescope("lsp_dynamic_workspace_symbols", {
+  --         symbols = {
+  --           "Class",
+  --           "Function",
+  --           "Method",
+  --           "Constructor",
+  --           "Interface",
+  --           "Module",
+  --           "Struct",
+  --           "Trait",
+  --           "Field",
+  --           "Property",
+  --         },
+  --       }),
+  --       desc = "Goto Symbol (Workspace, dynamic)",
+  --     },
+  --   },
+  -- },
 
-  -- scrollbar
-  {
+  { -- scrollbar
     "petertriho/nvim-scrollbar",
     event = "BufReadPost",
     config = function()

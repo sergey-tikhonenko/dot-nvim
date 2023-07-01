@@ -24,7 +24,7 @@ end
 -- delete without yanking
 map({ "n", "v" }, "<M-d>", '"_d', { desc = "Delete selection without yanking" })
 map({ "n", "v" }, "<M-c>", '"_c', { desc = "Change selection without yanking" })
-map({ "n", "v" }, "<M-d>", '"_x', { desc = "Delete symbol without yanking" })
+map({ "n", "v" }, "<M-x>", '"_x', { desc = "Delete symbol without yanking" })
 
 -- replace currently selected text with default register without yanking it
 map("v", "<leader>p", '"_dP', { desc = "Replace selections by clipboard content" })

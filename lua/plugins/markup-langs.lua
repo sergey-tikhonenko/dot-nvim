@@ -1,12 +1,15 @@
 -- see for example:
 -- <https://github.com/alpha2phi/modern-neovim/blob/main/lua/plugins/extras/pde/notes/markdown.lua>
 return {
-  -- map the html parser to be used when using xml files
+  -- configuration of enities conceal for XML is in ~/.config/nvim/after/syntax/xml.vim
+  -- and ../config/autocmds.lua
+
+  -- map the html parser to be used when using xml files TODO: looks like no need any more
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
-      local parser_mapping = require("nvim-treesitter.parsers").filetype_to_parsername
-      parser_mapping.xml = "html"
+      -- local parser_mapping = require("nvim-treesitter.parsers").filetype_to_parsername
+      -- parser_mapping.xml = "html"
     end,
   },
 
@@ -20,6 +23,7 @@ return {
         -- listed servers will be automatically installed with mason and loaded with lspconfig
         -- https://github.com/artempyanykh/marksman/blob/main/docs/configuration.md
         marksman = {}, -- makrdown language server
+        -- lemminx = {}, -- xml language server, defined in ./coding.lua
       },
     },
   },
