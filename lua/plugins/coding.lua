@@ -1,18 +1,12 @@
+-- Coding related plugins
 return {
-  -- add more treesitter parsers, see defaults here:
-  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/treesitter.lua#L38>
-  -- available parsers:
-  -- https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lua/nvim-treesitter/parsers.lua
-  -- https://tree-sitter.github.io/tree-sitter/#parsers (a bit outdated)
-  -- see ./extras/lang/rust.lua and markup-langs.lua for examples
-
   -- configure functions / methods jumps
   {
     "nvim-treesitter/nvim-treesitter",
     -- stylua: ignore
     keys = {
-      { ";", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next, mode = { "n", "x", "o" }, desc = "Repeat last move next" },
-      { ",", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous, mode = { "n", "x", "o" }, desc = "Repeat last move previous" },
+      { ";", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next, mode = { "n", "x", "o", }, desc = "Repeat last move next" },
+      { ",", require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous, mode = { "n", "x", "o", }, desc = "Repeat last move previous" },
     },
     opts = {
       textobjects = { -- configuration : https://github.com/nvim-treesitter/nvim-treesitter-textobjects#text-objects-move
@@ -59,28 +53,20 @@ return {
         -- ["*"] = function(server, opts) end,
       },
     },
+    -- additional LSP keymaps
+    init = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      keys[#keys + 1] = {
+        "gR",
+        function()
+          require("trouble").open("lsp_references")
+        end,
+        desc = "References (Trouble)",
+      }
+    end,
   },
 
-  -- Tools to be installed in addition to base:
-  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/lsp/init.lua#L153>
-  -- Implementations Language Servers: https://microsoft.github.io/language-server-protocol/implementors/servers/
-  -- {
-  --   "williamboman/mason.nvim",
-  --   opts = function(_, opts)
-  --     -- add codelldb and ...
-  --     vim.list_extend(opts.ensure_installed, { "codelldb" })
-  --   end,
-  -- },
-
-  -- for typescript and some others languages, LazyVim also includes extra specs to properly setup
-  -- lspconfig, treesitter, mason and typescript.nvim. ../config/lazy.lua
-  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/typescript.lua>
-  -- add jsonls and schemastore ans setup treesitter for json, json5 and jsonc
-  -- <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/json.lua>
-  -- Rust <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/rust.lua>
-  -- Go <https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/go.lua>
-
-  -- add symbols-outline
+  -- add symbols-outline - enabled by extras
   {
     "simrat39/symbols-outline.nvim",
     cmd = "SymbolsOutline",
@@ -96,14 +82,12 @@ return {
     keys = { { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "DiffView" } },
   },
 
-  -- add cmp-emoji
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   dependencies = { "hrsh7th/cmp-emoji" },
-  --   ---@param opts cmp.ConfigSchema
-  --   opts = function(_, opts)
-  --     local cmp = require("cmp")
-  --     opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
-  --   end,
-  -- }
+  -- to have block comments
+  { "numToStr/Comment.nvim", opts = {}, lazy = false },
+  -- disable it due to the lack of support for block comments
+  { "echasnovski/mini.comment", enabled = false },
+  -- { -- Comment line by Ctrl+/ TODO: used by LazyVim terminal now
+  --   "echasnovski/mini.comment",
+  --   keys = { { "<C-/>", 'v:lua.MiniComment.operator() . "_"', expr = true, desc = "Comment line" } },
+  -- },
 }

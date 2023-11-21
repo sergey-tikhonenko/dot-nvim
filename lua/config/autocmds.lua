@@ -16,6 +16,17 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   end,
 })
 
+-- wrap and check for spell in additional text filetypes
+-- https://github.com/LazyVim/LazyVim/blob/f9dadc11b39fb0b027473caaab2200b35c9f0c8b/lua/lazyvim/config/autocmds.lua#L72C1-L80C3
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("wrap_spell"),
+  pattern = { "text", "html" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})
+
 -- проверить
 -- Подсвечивает на доли секунды скопированную часть текста
 -- vim.api.nvim_exec([[

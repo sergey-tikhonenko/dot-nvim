@@ -1,4 +1,3 @@
--- see https://github.com/kevinhwang91/nvim-ufo/blob/main/doc/example.lua
 -- <https://github.com/folke/dot/blob/master/nvim/lua/plugins/editor.lua>
 -- <https://github.com/alpha2phi/modern-neovim/blob/main/lua/plugins/extras/pde/nvim-ufo.lua>
 -- <https://github.com/numamas/dotfiles/blob/master/init.lua#L501>

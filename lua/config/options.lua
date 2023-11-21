@@ -1,8 +1,27 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-
+vim.opt.spelllang = { "ru", "en_us" }
+-- vim.lsp.set_log_level = "debug"
 -- Treesitter folding
 -- vim.wo.foldmethod = "expr"
 -- vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 -- vim.wo.foldlevel = 9
+-- vim.g.markdown_fenced_languages = {
+--   "python",
+--   "go",
+--   "rust",
+--   "bash",
+--   "shell=bash",
+--   "css",
+--   "erb=eruby",
+--   "javascript",
+--   "js=javascript",
+--   -- "json=javascript",
+--   "ruby",
+--   "sass",
+--   "json",
+--   "yaml",
+--   "xml",
+--   "html",
+-- }
